@@ -35,7 +35,7 @@ setInterval(() =>
 }, 100);
 alert("Welcome to Mango247's counting bot! Press \"P\" to pause the bot at any time! Press OK to start!");
 var firstLoop = true,
-	countingBotInterval, isPaused = true,
+	countingBotInterval, isPaused = false,
 	secondsRemaining = 3,
 	hasLoggedPaused = false,
 	hasLoggedStarted = false;
@@ -183,7 +183,7 @@ function changeQuickReplyText()
 			{
 				replyDiv.textContent = "Counting bot paused";
 			}
-			else if (welcomeMessage !== null)
+			else if (!hasLoggedStarted)
 			{
 				replyDiv.textContent = "Waiting for the bot to start.";
 			}
