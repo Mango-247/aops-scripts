@@ -33,9 +33,9 @@ setInterval(() =>
 		jumpToEndButton.click();
 	}
 }, 100);
-alert("Press \"P\" to pause the bot at any time! Press OK to start!");
+alert("Welcome to Mango247's counting bot! Press \"P\" to pause the bot at any time! Press OK to start!");
 var firstLoop = true,
-	countingBotInterval, isPaused = false,
+	countingBotInterval, isPaused = true,
 	secondsRemaining = 3,
 	hasLoggedPaused = false,
 	hasLoggedStarted = false;
@@ -157,13 +157,14 @@ function checkAndStartBot()
 		{
 			console.log("Counting bot started.");
 			hasLoggedStarted = true;
+			isPaused = false;
 		}
 		runCountingBot();
 		document.addEventListener('keydown', handleKeyPress);
 	}
 	else
 	{
-		setTimeout(checkAndStartBot, 1000);
+		setTimeout(checkAndStartBot, 100);
 	}
 }
 
