@@ -15,14 +15,12 @@ box.style.userSelect = 'none';
 box.style.transform = 'translateZ(0)';
 document.body.appendChild(box);
 
-
 const boxWidth = 250;
 const boxHeight = 140;
 
 box.style.left = `${(window.innerWidth - boxWidth) / 2}px`;
 box.style.top = `${(window.innerHeight - boxHeight) / 2}px`;
 
-// Draggable functionality
 let isDragging = false;
 let offsetX, offsetY;
 
@@ -84,7 +82,6 @@ box.appendChild(text);
 
 ///////////////////////////////////////////////////////////////// Put Stuff In Box /////////////////////////////////////////////////////////////////
 
-
 const input = document.createElement('input');
 input.placeholder = 'Enter Link to Topic';
 input.style.width = '100%';
@@ -116,7 +113,6 @@ button.style.fontWeight = 'bold';
 button.addEventListener('click', viewBot);
 box.appendChild(button);
 
-
 const otherButton = document.createElement('button');
 otherButton.textContent = "Help / Report a Bug";
 otherButton.style.width = '235px';
@@ -135,7 +131,6 @@ otherButton.style.transform = 'translateX(-50%)';
 
 otherButton.addEventListener('click', help);
 box.appendChild(otherButton);
-
 
 /////////////////////////////////////////////////////// Code To Make The Box Actually Do Stuff Instead Of Just Looking Like It Does Stuff ///////////////////////////////////////////////////////
 
@@ -184,8 +179,6 @@ aops_session_id=${AoPS.session.id}`.replace(/\n|\s{2,}/g, ""),
     });
 }
 
-
-
 async function spamViews(topic_id) {
     if (delay <= 1) {
         delay = 15;
@@ -215,8 +208,6 @@ async function spamViews(topic_id) {
     spamViews(topic_id);
 }
 
-
-
 async function viewBot() {
     const url = input.value;
     console.log(url)
@@ -229,9 +220,7 @@ async function viewBot() {
         const topic_id = match[1];
         console.log("topic_id:", topic_id);
 
-
         box.style.background = 'linear-gradient(to bottom, #1b365d 0px, #1b365d 30px, #009fad 30px, #009fad 90px, #000000 90px, #000000 92px, #009fad 92px, #009fad 150px, #9f9f9f 150px)';
-
 
         note2.textContent = 'Views will only be visible after refreshing';
         note2.style.fontSize = '12px';
@@ -272,7 +261,6 @@ async function viewBot() {
         starting_views = (await (await view(topic_id)).json()).response.topic_update_data.num_views;
 
         totalLabel.textContent = `Total views: ${starting_views}`;
-
 
         spamViews(topic_id)
     } else {
