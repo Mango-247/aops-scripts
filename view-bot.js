@@ -1,3 +1,5 @@
+// Hey there :D
+
 ///////////////////////////////////////////////////////////////// Create Box /////////////////////////////////////////////////////////////////
 
 const box = document.createElement('div');
@@ -137,14 +139,18 @@ box.appendChild(otherButton);
 let starting_views = 0;
 let views = 0;
 let total_views = 0;
+let speed = 1;
+let lastIncreaseTime = 0;
+let activeRequests = 0;
 let progressLabel = document.createElement('div');
 let totalLabel = document.createElement('div');
 let note = document.createElement('div');
 let note2 = document.createElement('div');
+const sliderContainer = document.createElement('div');
 
-let delay = 50; // Variables to control how the probing for max efficiency works
+let delay = 3; // Default delay for probing
 const max_delay = 1000;
-let decrease_factor = 0.99;
+let decrease_factor = 0.999;
 const increase_factor = 1.1;
 
 const abortControllers = [];
@@ -164,40 +170,86 @@ function view(topic_id, controller) {
         body: `topic_fetch=update&update=&new_topic_id=${topic_id}&new_category_id=1&last_post_num=523&last_update_time=1746236353&old_topic_id=3560361&source=master&hash=3040100&is_office_hours=0&a=change_focus_topic&aops_logged_in=true&aops_session_id=${AoPS.session.id}`,
         mode: "cors",
         credentials: "include",
-        signal: controller.signal // Attach the abort controller signal here
+        signal: controller.signal
     });
 }
 
+
+let running = false;
 
 async function spamViews(topic_id) {
+    if (running) return;
+    running = true;
 
-    const controller = new AbortController(); // Create a new AbortController
-    abortControllers.push(controller); // Keep track of all controllers for potential abortion
-
-    view(topic_id, controller)
-    .then(response => response.json())
-    .then(data => {
-        total_views = parseInt(data.response.topic_update_data.num_views);
-        views = parseInt(data.response.topic_update_data.num_views) - starting_views;
-        console.log("views:", views)
-        total_views = data.response.topic_update_data.num_views;
-        progressLabel.textContent = `Views added: ${views}`;
-        totalLabel.textContent = `Total views: ${total_views}`;
-        delay = delay * decrease_factor;
-    })
-    .catch((error) => {
-        if (error.name === 'AbortError') {
-            console.log('Fetch aborted');
-        } else {
-            console.error("View failed:", error);
-            decrease_factor = 0.9997;
-            delay = Math.min(delay * increase_factor, max_delay);
+    while (running) {
+        if (speed === 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            continue;
         }
-    });
 
-    await new Promise(resolve => setTimeout(resolve, delay));
-    spamViews(topic_id);
+        const controller = new AbortController();
+        abortControllers.push(controller);
+
+        const sendRequest = async () => {
+            activeRequests++;
+            try {
+                const response = await view(topic_id, controller);
+                const data = await response.json();
+
+                total_views = parseInt(data.response.topic_update_data.num_views);
+                views = total_views - starting_views;
+                progressLabel.textContent = `Views added: ${views}`;
+                totalLabel.textContent = `Total views: ${total_views}`;
+
+                if (speed === 5) {
+                    delay = delay * decrease_factor;
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error("View failed:", error);
+                    if (speed === 5) {
+                        const now = Date.now();
+                        if (now - lastIncreaseTime >= 500) {
+                            decrease_factor = 1;
+                            delay = Math.min(delay * increase_factor, max_delay);
+                            lastIncreaseTime = now;
+                        }
+                    }
+                }
+            } finally {
+                activeRequests--;
+            }
+        };
+
+        if (speed === 2) {
+            await new Promise(resolve => setTimeout(resolve, 300));
+            await sendRequest();
+        } else if (speed === 3) {
+            while (activeRequests < 3) {
+                sendRequest();
+            }
+            await new Promise(resolve => setTimeout(resolve, 1));
+        } else if (speed === 4) {
+            while (activeRequests < 8) {
+                sendRequest();
+            }
+            await new Promise(resolve => setTimeout(resolve, 1));
+        } else if (speed === 5) {
+            while (activeRequests < 30) {
+                sendRequest();
+            }
+            await new Promise(resolve => setTimeout(resolve, delay));
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 1));
+        }
+    }
 }
+
+
+
+
 
 async function viewBot() {
     const url = input.value;
@@ -206,12 +258,53 @@ async function viewBot() {
     if (match) {
         input.remove()
         button.remove()
-        otherButton.style.margin = '15px 0';
+        otherButton.style.margin = '9px 0';
 
         const topic_id = match[1];
         console.log("topic_id:", topic_id);
 
-        box.style.background = 'linear-gradient(to bottom, #1b365d 0px, #1b365d 30px, #009fad 30px, #009fad 90px, #000000 90px, #000000 92px, #009fad 92px, #009fad 150px, #9f9f9f 150px)';
+        box.style.height = "243px"
+        box.style.background = 'linear-gradient(to bottom, #1b365d 0px, #1b365d 30px, #009fad 30px, #009fad 90px, #000000 90px, #000000 92px, #009fad 92px, #009fad 150px, #000000 150px, #000000 152px, #009fad 152px, #009fad 212px, #000000 212px, #000000 214px,  #9f9f9f 212px, #9f9f9f 243px)';
+
+        sliderContainer.style.display = 'flex';
+        sliderContainer.style.textAlign = 'center';
+        sliderContainer.style.alignItems = 'center';
+        sliderContainer.style.flexDirection = 'column';
+        sliderContainer.style.margin = '14px 0px 0px 0px';
+        
+        sliderContainer.innerHTML = `
+            <span id="speed-label" style="font-weight:bold; margin-top: 5px; margin-bottom: -3px;">Speed: ${speed}</span>
+            <div id="speed-message" style="font-size: 14px; font-weight: normal; margin-top: 0px; margin-bottom: 0px;">Paused</div>
+            <input type="range" id="speed-slider" min="1" max="5" value="${speed}" style="width:150px; flex-shrink:0; accent-color: #1b365d; margin-top: -3px;" /> 
+        `;
+
+        document.querySelector(".cmty-post-middle").appendChild(sliderContainer);
+        
+        const slider = document.getElementById('speed-slider');
+        const speedLabel = document.getElementById('speed-label');
+        const messageDiv = document.getElementById('speed-message');
+        
+        function updateMessage() {
+            switch (speed) {
+                case 1: messageDiv.textContent = 'Paused'; break;
+                case 2: messageDiv.textContent = 'For getting an exact number'; break;
+                case 3: messageDiv.textContent = '"I need all my memory!"'; break;
+                case 4: messageDiv.textContent = '"You can have some memory ig"'; break;
+                case 5: messageDiv.textContent = '"Idc if you use 50% of my memory"'; break;
+                default: messageDiv.textContent = 'An error occured'; break;
+            }
+        }
+        
+        speedLabel.textContent = `Speed: ${slider.value}`;
+        updateMessage();
+        
+        slider.addEventListener('input', () => {
+            speed = parseInt(slider.value, 10);
+            speedLabel.textContent = `Speed: ${speed}`;
+            updateMessage();
+        });
+
+        box.insertBefore(sliderContainer, box.children[1]);
 
         note2.textContent = 'Views will only be visible after refreshing';
         note2.style.fontSize = '12px';
@@ -219,7 +312,7 @@ async function viewBot() {
         note2.style.color = '#ffffff';
         note2.style.textAlign = 'center';
         note2.style.lineHeight = '10px';
-        note2.style.margin = '10px 0 0 0';
+        note2.style.margin = '9px 0 0 0';
         box.insertBefore(note2, box.children[1]);
 
         note.textContent = 'Refresh page to stop';
@@ -253,9 +346,8 @@ async function viewBot() {
 
         totalLabel.textContent = `Total views: ${starting_views}`;
 
-        spamViews(topic_id)
+        spamViews(topic_id);
     } else {
         alert('You entered an invalid topic url. If you need help or think this is a bug click the "Help / Report a Bug" button.')
     }
 }
-
