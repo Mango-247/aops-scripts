@@ -277,8 +277,6 @@ async function viewBot() {
             <div id="speed-message" style="font-size: 14px; font-weight: normal; margin-top: 0px; margin-bottom: 0px;">Paused</div>
             <input type="range" id="speed-slider" min="1" max="5" value="${speed}" style="width:150px; flex-shrink:0; accent-color: #1b365d; margin-top: -3px;" /> 
         `;
-
-        document.querySelector(".cmty-post-middle").appendChild(sliderContainer);
         
         const slider = document.getElementById('speed-slider');
         const speedLabel = document.getElementById('speed-label');
