@@ -146,13 +146,14 @@ let delay = 50; // Variables to control how the probing for max efficiency works
 const max_delay = 1000;
 let decrease_factor = 0.99;
 const increase_factor = 1.1;
-let burstSize = 1;
+
+const abortControllers = [];
 
 function help() {
     alert('To use this view bot, click on the topic you want to add views to, and copy the link you are on. It should look something like https://artofproblemsolving.com/community/c1234h5678. Just copy this into the "link to thread" input and click start. If you need more help or want to report a bug please send a PM to Mango247.')
 }
 
-function view(topic_id) {
+function view(topic_id, controller) {
     return fetch("https://artofproblemsolving.com/m/community/ajax.php", {
         method: "POST",
         headers: {
@@ -160,49 +161,39 @@ function view(topic_id) {
         },
         referrer: "https://artofproblemsolving.com/",
         referrerPolicy: "origin",
-        body: `
-topic_fetch=update&
-update=&
-new_topic_id=${topic_id}&
-new_category_id=1&
-last_post_num=523&
-last_update_time=1746236353&
-old_topic_id=3560361&
-source=master&
-hash=3040100&
-is_office_hours=0&
-a=change_focus_topic&
-aops_logged_in=true&
-aops_session_id=${AoPS.session.id}`.replace(/\n|\s{2,}/g, ""),
+        body: `topic_fetch=update&update=&new_topic_id=${topic_id}&new_category_id=1&last_post_num=523&last_update_time=1746236353&old_topic_id=3560361&source=master&hash=3040100&is_office_hours=0&a=change_focus_topic&aops_logged_in=true&aops_session_id=${AoPS.session.id}`,
         mode: "cors",
-        credentials: "include"
+        credentials: "include",
+        signal: controller.signal // Attach the abort controller signal here
     });
 }
 
-async function spamViews(topic_id) {
-    if (delay <= 1) {
-        delay = 15;
-        burstSize += 1;
-    }
 
-    for (let i = 0; i < burstSize; i++) {
-        view(topic_id)
-            .then(response => response.json())
-            .then(data => {
-            total_views = parseInt(data.response.topic_update_data.num_views);
-            views = parseInt(data.response.topic_update_data.num_views) - starting_views;
-            console.log("views:",views)
-            total_views = data.response.topic_update_data.num_views;
-            progressLabel.textContent = `Views added: ${views}`;
-            totalLabel.textContent = `Total views: ${total_views}`;
-            delay = delay * decrease_factor;
-        })
-            .catch((error) => {
+async function spamViews(topic_id) {
+
+    const controller = new AbortController(); // Create a new AbortController
+    abortControllers.push(controller); // Keep track of all controllers for potential abortion
+
+    view(topic_id, controller)
+    .then(response => response.json())
+    .then(data => {
+        total_views = parseInt(data.response.topic_update_data.num_views);
+        views = parseInt(data.response.topic_update_data.num_views) - starting_views;
+        console.log("views:", views)
+        total_views = data.response.topic_update_data.num_views;
+        progressLabel.textContent = `Views added: ${views}`;
+        totalLabel.textContent = `Total views: ${total_views}`;
+        delay = delay * decrease_factor;
+    })
+    .catch((error) => {
+        if (error.name === 'AbortError') {
+            console.log('Fetch aborted');
+        } else {
             console.error("View failed:", error);
             decrease_factor = 0.9997;
             delay = Math.min(delay * increase_factor, max_delay);
-        });
-    }
+        }
+    });
 
     await new Promise(resolve => setTimeout(resolve, delay));
     spamViews(topic_id);
@@ -258,7 +249,7 @@ async function viewBot() {
         progressLabel.style.margin = '24px 0 0 0';
         box.insertBefore(progressLabel, box.children[1]);
 
-        starting_views = (await (await view(topic_id)).json()).response.topic_update_data.num_views;
+        starting_views = (await (await view(topic_id, new AbortController())).json()).response.topic_update_data.num_views;
 
         totalLabel.textContent = `Total views: ${starting_views}`;
 
@@ -267,3 +258,4 @@ async function viewBot() {
         alert('You entered an invalid topic url. If you need help or think this is a bug click the "Help / Report a Bug" button.')
     }
 }
+
