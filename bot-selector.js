@@ -33,6 +33,7 @@ fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
     let offsetX, offsetY;
 
     box.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
         const isInteractive = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(e.target.tagName) || e.target.isContentEditable;
         if (!isInteractive) {
             isDragging = true;
