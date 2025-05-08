@@ -1,4 +1,4 @@
-// Version 1.2
+// Version 1.3
 
 ///////////////////////////////////////////////////////////////// Fetch JS Files and Create Box /////////////////////////////////////////////////////////////////
 
@@ -141,7 +141,7 @@ fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
     helpButton.style.transform = 'translateX(-50%)';
 
     helpButton.addEventListener('click', () => {
-        alert('To use this script selector, simply click the script you wish to run. If you want to report a bug, please PM Mango247.');
+        alert('To use this bot selector, simply click the script you wish to run. If you want to report a bug, please PM Mango247.');
     });
 
     box.appendChild(helpButton);
