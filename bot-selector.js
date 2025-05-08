@@ -114,7 +114,7 @@ fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
 
         fileButton.addEventListener('click', () => {
             box.remove()
-            fetch(`https://cdn.statically.io/gh/Mango-247/aops-scripts/main/${file}`)
+            fetch(`https://cdn.jsdelivr.net/gh/Mango-247/aops-scripts@main/${file}`)
               .then(response => response.text())
               .then(text => {
                 eval(text)
