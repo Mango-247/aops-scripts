@@ -6,6 +6,10 @@ To run the bot selector go to any artofproblemsolving.com page and run the follo
 
 `fetch('https://cdn.jsdelivr.net/gh/Mango-247/aops-scripts@main/bot-selector.js').then(r=>r.text()).then(eval)`
 
+If you want to only run a specific script, instead of selecting it in the bot selector, you can replace bot-selector with the name of that file. You can also just directly copy and paste the code in that file into the console.
+
+I would always reccomend you to look over all the code before you run it to make sure it isnt mallicious. 
+
 Here are the hotkeys to open the browser console for most devices and browsers:
 
 ### 1. Google Chrome
