@@ -1,4 +1,4 @@
-    // version 2.2
+    // version 2.3
 
     ///////////////////////////////////////////////////////////////// Create Box /////////////////////////////////////////////////////////////////
 
@@ -268,13 +268,13 @@
                 pending = true;
                 post(topic_id, `[asy]size(2cm); pen[][]p={{red,orange,yellow,green,blue,purple}}; latticeshade(texpath("${last_num+1}"),p);[/asy]`)
                     .then(result => {
+                    pending = false;
                     if (result) {
                         eta = 25;
                         posts_added++;
                         lastNumLabel.textContent = `Last Number: ${last_num + 1}`;
                         postsLabel.textContent = `Posts Made: ${posts_added}`;
                         eta_note.textContent = `Posted!`;
-                        pending = false;
                     }
                 });
             }
