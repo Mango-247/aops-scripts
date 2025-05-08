@@ -1,4 +1,4 @@
-// version 2.1
+// version 2.2
 
 ///////////////////////////////////////////////////////////////// Create Box /////////////////////////////////////////////////////////////////
 
@@ -266,6 +266,7 @@ async function viewBot() {
         box.style.height = "243px"
         box.style.background = 'linear-gradient(to bottom, #1b365d 0px, #1b365d 30px, #009fad 30px, #009fad 90px, #000000 90px, #000000 92px, #009fad 92px, #009fad 150px, #000000 150px, #000000 152px, #009fad 152px, #009fad 212px, #000000 212px, #000000 214px,  #9f9f9f 212px, #9f9f9f 243px)';
 
+        box.insertBefore(sliderContainer, box.children[1]);
         sliderContainer.style.display = 'flex';
         sliderContainer.style.textAlign = 'center';
         sliderContainer.style.alignItems = 'center';
@@ -277,6 +278,7 @@ async function viewBot() {
             <div id="speed-message" style="font-size: 14px; font-weight: normal; margin-top: 0px; margin-bottom: 0px;">Paused</div>
             <input type="range" id="speed-slider" min="1" max="5" value="${speed}" style="width:150px; flex-shrink:0; accent-color: #1b365d; margin-top: -3px;" /> 
         `;
+
         
         const slider = document.getElementById('speed-slider');
         const speedLabel = document.getElementById('speed-label');
@@ -292,9 +294,11 @@ async function viewBot() {
                 default: messageDiv.textContent = 'An error occured'; break;
             }
         }
-        
         speedLabel.textContent = `Speed: ${slider.value}`;
+
         updateMessage();
+
+
         
         slider.addEventListener('input', () => {
             speed = parseInt(slider.value, 10);
@@ -302,7 +306,6 @@ async function viewBot() {
             updateMessage();
         });
 
-        box.insertBefore(sliderContainer, box.children[1]);
 
         note2.textContent = 'Views will only be visible after refreshing';
         note2.style.fontSize = '12px';
