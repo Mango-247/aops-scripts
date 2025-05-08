@@ -196,7 +196,7 @@
             },
             referrer: "https://artofproblemsolving.com/",
             referrerPolicy: "origin",
-            body: `topic_id=${topic_id}&direction=backwards&start_post_id=-1&start_post_num=9999999&show_from_time=-1&num_to_fetch=15&a=fetch_posts_for_topic&aops_logged_in=true&aops_user_id=${AoPS.session.id}&aops_session_id=${AoPS.session.id}`,
+            body: `topic_id=${topic_id}&direction=backwards&start_post_id=-1&start_post_num=9999999&show_from_time=-1&num_to_fetch=5&a=fetch_posts_for_topic&aops_logged_in=true&aops_user_id=${AoPS.session.id}&aops_session_id=${AoPS.session.id}`,
             method: "POST",
             mode: "cors",
             credentials: "include"
