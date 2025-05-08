@@ -1,4 +1,4 @@
-    // version 2.0
+    // version 2.1
 
     ///////////////////////////////////////////////////////////////// Create Box /////////////////////////////////////////////////////////////////
 
@@ -123,7 +123,7 @@
     otherButton.style.color = 'black';
     otherButton.style.border = 'none';
     otherButton.style.cursor = 'pointer';
-    otherButton.style.margin = '24px 0';
+    otherButton.style.margin = '18px 0';
     otherButton.style.display = 'block';
     otherButton.style.fontWeight = 'bold';
 
