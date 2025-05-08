@@ -1,4 +1,4 @@
-// Version 1.1
+// Version 1.2
 
 ///////////////////////////////////////////////////////////////// Fetch JS Files and Create Box /////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,6 @@ fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
   .then(response => response.json())
   .then(data => {
     const jsFiles = data.filter(file => file.name.endsWith('.js')).map(file => file.name);
-    console.log(jsFiles);
 
     const box = document.createElement('div');
     box.style.position = 'fixed';
@@ -114,7 +113,6 @@ fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
 
         fileButton.addEventListener('click', () => {
             box.remove()
-            console.log("Fetching",`https://cdn.statically.io/gh/Mango-247/aops-scripts/main/${file}`)
             fetch(`https://cdn.statically.io/gh/Mango-247/aops-scripts/main/${file}`)
               .then(response => response.text())
               .then(text => {
