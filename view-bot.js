@@ -198,8 +198,8 @@ async function spamViews(topic_id) {
 
                 total_views = parseInt(data.response.topic_update_data.num_views);
                 views = total_views - starting_views;
-                progressLabel.textContent = `Views added: ${views}`;
-                totalLabel.textContent = `Total views: ${total_views}`;
+                progressLabel.textContent = `Views Added: ${views}`;
+                totalLabel.textContent = `Total Views: ${total_views}`;
 
                 if (speed === 5) {
                     delay = delay * decrease_factor;
@@ -322,7 +322,7 @@ async function viewBot() {
         note.style.margin = '33px 0 0 0';
         box.insertBefore(note, box.children[1]);
 
-        totalLabel.textContent = `Total views: 0`;
+        totalLabel.textContent = `Total Views: 0`;
         totalLabel.style.fontSize = '20px';
         totalLabel.style.fontWeight = 'bold';
         totalLabel.style.color = '#ffe338';
@@ -331,7 +331,7 @@ async function viewBot() {
         totalLabel.style.margin = '10px 0 0 0';
         box.insertBefore(totalLabel, box.children[1]);
 
-        progressLabel.textContent = 'Views added: 0';
+        progressLabel.textContent = 'Views Added: 0';
         progressLabel.style.fontSize = '20px';
         progressLabel.style.fontWeight = 'bold';
         progressLabel.style.color = '#55ff55';
@@ -342,7 +342,7 @@ async function viewBot() {
 
         starting_views = (await (await view(topic_id, new AbortController())).json()).response.topic_update_data.num_views;
 
-        totalLabel.textContent = `Total views: ${starting_views}`;
+        totalLabel.textContent = `Total Views: ${starting_views}`;
 
         spamViews(topic_id);
     } else {
