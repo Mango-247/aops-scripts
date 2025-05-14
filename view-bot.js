@@ -136,7 +136,7 @@ box.appendChild(otherButton);
 
 /////////////////////////////////////////////////////// Code To Make The Box Actually Do Stuff Instead Of Just Looking Like It Does Stuff ///////////////////////////////////////////////////////
 
-let starting_views = 0;
+let views_added = 0
 let views = 0;
 let total_views = 0;
 let speed = 1;
@@ -197,8 +197,8 @@ async function spamViews(topic_id) {
                 const data = await response.json();
 
                 total_views = parseInt(data.response.topic_update_data.num_views);
-                views = total_views - starting_views;
-                progressLabel.textContent = `Views Added: ${views}`;
+                views_added ++;
+                progressLabel.textContent = `Views Added: ${views_added}`;
                 totalLabel.textContent = `Total Views: ${total_views}`;
 
                 if (speed === 5) {
@@ -291,7 +291,7 @@ async function viewBot() {
                 case 3: messageDiv.textContent = '"I need all my memory!"'; break;
                 case 4: messageDiv.textContent = '"You can have some memory ig"'; break;
                 case 5: messageDiv.textContent = '"Idc if you use 50% of my memory"'; break;
-                default: messageDiv.textContent = 'An error occured'; break;
+                default: messageDiv.textContent = ''; break;
             }
         }
         speedLabel.textContent = `Speed: ${slider.value}`;
@@ -343,8 +343,7 @@ async function viewBot() {
         progressLabel.style.margin = '24px 0 0 0';
         box.insertBefore(progressLabel, box.children[1]);
 
-        starting_views = (await (await view(topic_id, new AbortController())).json()).response.topic_update_data.num_views;
-
+        const starting_views = (await (await view(topic_id, new AbortController())).json()).response.topic_update_data.num_views;
         totalLabel.textContent = `Total Views: ${starting_views}`;
 
         spamViews(topic_id);
