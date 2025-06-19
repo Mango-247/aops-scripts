@@ -1,5 +1,8 @@
 // Version 1.4
 
+alert("Decommissioned since I can't get postbanned again. Sorry.")
+throw new Error("Hey There");
+
 ///////////////////////////////////////////////////////////////// Fetch JS Files and Create Box /////////////////////////////////////////////////////////////////
 
 fetch('https://api.github.com/repos/Mango-247/aops-scripts/contents?ref=main')
