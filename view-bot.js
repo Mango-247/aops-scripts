@@ -1,5 +1,8 @@
 // version 2.2
 
+alert("Decommissioned since I can't get postbanned again. Sorry.")
+throw new Error("Hey There");
+
 ///////////////////////////////////////////////////////////////// Create Box /////////////////////////////////////////////////////////////////
 
 const box = document.createElement('div');
